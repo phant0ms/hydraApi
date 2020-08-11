@@ -12,7 +12,7 @@ import sys
 import logging.config
 
 
-BASE_DIR = os.path.join(os.path.dirname(__file__), 'logs')
+BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'logs')
 if not os.path.exists(BASE_DIR):
     os.makedirs(BASE_DIR)
 
@@ -79,62 +79,7 @@ LOGGING = {
             'backupCount': 10,  # 备份份数
             'encoding': 'utf8',  # 文件编码
             'delay': True,
-        },
-        'request':{
-            'level': 'INFO',
-            # 'class': 'cloghandler.ConcurrentRotatingFileHandler',
-            #'class': 'logging.handlers.RotatingFileHandler',
-            'class':'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(BASE_DIR, 'requests.log'),  # 输出位置
-            #'maxBytes': 1024 * 1024 * 50,  # 文件大小 50M
-            'when':'MIDNIGHT',
-            'backupCount': 10,  # 备份份数
-            'encoding': 'utf8',  # 文件编码
-            'delay': True,
-        },
-
-        'api': {
-            'level': 'DEBUG',
-            # 'class': 'cloghandler.ConcurrentRotatingFileHandler',
-            # 'class': 'logging.handlers.RotatingFileHandler',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(BASE_DIR, 'api.log'),  # 输出位置
-            # 'maxBytes': 1024 * 1024 * 50,  # 文件大小 50M
-            'when': 'MIDNIGHT',
-            'backupCount': 10,  # 备份份数
-            'encoding': 'utf8',  # 文件编码
-            'delay': True,
-        },
-
-        'error': {
-            'level': 'DEBUG',
-            # 'class': 'cloghandler.ConcurrentRotatingFileHandler',
-            #'class': 'logging.handlers.RotatingFileHandler',
-            'class':'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard',
-            'filename': os.path.join(BASE_DIR, 'error.log'),  # 输出位置
-            #'maxBytes': 1024 * 1024 * 50,  # 文件大小 50M
-            'when':'MIDNIGHT',
-            'backupCount': 10,  # 备份份数
-            'encoding': 'utf8',  # 文件编码
-            'delay': True,
-        },
-
-        'httpclient': {
-            'level': 'DEBUG',
-            # 'class': 'cloghandler.ConcurrentRotatingFileHandler',
-            #'class': 'logging.handlers.RotatingFileHandler',
-            'class':'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'simple',
-            'filename': os.path.join(BASE_DIR, 'httpClient.log'),  # 输出位置
-            #'maxBytes': 1024 * 1024 * 50,  # 文件大小 50M
-            'when':'MIDNIGHT',
-            'backupCount': 10,  # 备份份数
-            'encoding': 'utf8',  # 文件编码
-            'delay': True,
-        },
+        }
     },
 
     # 日志管理器集合
@@ -144,27 +89,7 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': True,  # 是否传递给父记录器
-        },
-        'reqlogger':{ #记录 request 信息。
-            'handlers':['request'],
-            'level':'INFO',
-            'propagate':True,
-        },
-        'api': {
-            'handlers': ['console','api'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'error':{
-            'handlers': ['console', 'error'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'httpclient':{
-            'handlers': ['httpclient'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
+        }
     }
 }
 

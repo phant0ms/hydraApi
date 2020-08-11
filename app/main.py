@@ -15,4 +15,4 @@ webapp = FastAPI(title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR
 webapp.include_router(api_router, prefix= settings.API_V1_STR)
 
 if __name__ == '__main__':
-    uvicorn.run(webapp, host="127.0.0.1", port=8000, reload=True,)
+    uvicorn.run(webapp, host="127.0.0.1", port=8080, )

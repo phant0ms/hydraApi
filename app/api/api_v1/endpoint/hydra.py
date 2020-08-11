@@ -5,11 +5,18 @@
 # @File    : hydra.py
 
 
-from app.schemas.response import Response
+from app.schemas.items import Response
 
 from fastapi import APIRouter
+from typing import List
 # from app.modules.tasks import Tasks
 from app.services.task_opts import new_tasks
+from app.services.task_opts import start_tasks
+from app.schemas.items import ItemsCreate
+
+from fastapi import Depends
+
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 router = APIRouter()
 
@@ -24,14 +31,16 @@ def new():
     return new_tasks()
 
 
-@router.get('/task/{task_id}/delete')
-def delete(task_id:str):
+@router.post('/task/{task_id}/start', response_model=Response)
+def start(task_id:str, target: ItemsCreate):
     '''
-    删除指定的任务
-    :param task_id:
+
+    :param task_id: 任务 id.
+    :param target: 扫描的域名或者 ip. 多个目标使用`,`分隔
     :return:
     '''
-    return True
+    return start_tasks(task_id, target)
+    # return 'task start'
 
 
 @router.get('/task/{task_id}/stop')
@@ -43,13 +52,24 @@ def stop(task_id:str):
     '''
     return task_id
 
-
-@router.post('/task/{task_id}/start')
-def start(task_id:str):
-    print(status)
-    return 'task start'
-
-
 @router.get('/task/{task_id}/status')
-def status(task_id:str):
+def status(task_id:str, ):
     return 'task status'
+
+
+@router.get('/task/{task_id}/delete')
+def delete(task_id:str):
+    '''
+    删除指定的任务
+    :param task_id:
+    :return:
+    '''
+    return True
+
+
+@router.post('/login/access-token')
+def login_access_token(from_data: OAuth2PasswordRequestForm = Depends()):
+    print(from_data.username, from_data.password)
+    print(from_data)
+
+

@@ -6,7 +6,7 @@
 
 from app.db.base_class import Base
 
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Text
 
 
 class Tasks(Base):
@@ -18,6 +18,7 @@ class Tasks(Base):
     status = Column(Integer, default=1, comment="任务状态, 1:新建, 2: 运行中, 3:完成,4:停止,5 删除")
     create_time = Column(DateTime, comment="任务创建时间")
     end_time = Column(DateTime, comment="任务结束时间")
+    targets =  Column(Text, comment="任务目标")
 
 
 

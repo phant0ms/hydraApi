@@ -88,6 +88,11 @@ class Settings(BaseSettings):
     # FIRST_SUPERUSER_PASSWORD: str
     # USERS_OPEN_REGISTRATION: bool = False
 
+    REDIS_HOST: str = ''
+    REDIS_PORT: int = 6739
+    REDIS_DB: int = 1
+    REDIS_AUTH: str = ''
+
     class Config:
         case_sensitive = False
 
