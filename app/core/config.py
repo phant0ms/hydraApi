@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
 
-
+from fastapi import FastAPI
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     # SECRET_KEY: str = secrets.token_urlsafe(32)
@@ -102,3 +102,5 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
+webapp = FastAPI(title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json", debug = True)
+# webapp = FastAPI()

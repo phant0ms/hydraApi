@@ -25,5 +25,5 @@ def current_datetime():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 
-def invalid_token():
-    return {'success': False, 'data':{}, 'message':'无效的access_token'}
+# def invalid_token():
+#     return {'success': False, 'data':{}, 'message':'无效的access_token'}

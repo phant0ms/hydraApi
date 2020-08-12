@@ -24,7 +24,7 @@ from fastapi.openapi.utils import get_openapi
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.responses import RedirectResponse, JSONResponse
 from app.core.security import authenticate
-from app.utils.common import invalid_token
+
 
 router = APIRouter()
 
@@ -36,8 +36,8 @@ def new(auth: bool = Depends(authenticate)):
 
     如果成功则返回任务id
     '''
-    if not auth:
-        return invalid_token()
+    # if not auth:
+    #     return invalid_token()
     return new_tasks()
 
 

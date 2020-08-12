@@ -4,9 +4,9 @@
 # @Time    : 2020/8/11 10:08
 # @File    : security.py
 
-
+import secrets
 from datetime import datetime, timedelta
-from typing import Any, Union,Optional
+from typing import Any, Union, Optional
 from app.schemas.token import TokenPayload
 
 from jose import jwt
@@ -15,9 +15,10 @@ from pydantic import ValidationError
 from fastapi import HTTPException, status, Header
 
 from app.core.config import settings
+# from main import Invalid_Token_Exception
+from app.core.exception import Invalid_Token_Exception
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 ALGORITHM = "HS256"
 
@@ -29,7 +30,7 @@ def create_access_token(subject: Union[str, Any], expires_delta: timedelta = Non
         expire = datetime.utcnow() + timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
-    to_encode = {"exp": expire, "sub": str(subject)}
+    to_encode = {"exp": expire, "sub": str(subject), 'nonce': secrets.token_hex(20)}
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -62,23 +63,18 @@ def verify_token(token: str):
 
 
 def authenticate(access_token: Optional[str] = Header(None)):
-    print(access_token)
-    if not access_token or access_token=='':
-        return False
+    if not access_token or access_token == '':
+        raise Invalid_Token_Exception(msg='Access_Token不能为空')
     try:
         payload = jwt.decode(
             access_token, settings.SECRET_KEY, algorithms=[ALGORITHM]
         )
-        print(payload)
+        # print(payload)
         token_data = TokenPayload(**payload)
     except (jwt.JWTError, ValidationError):
-        return False
+        raise Invalid_Token_Exception()
 
     return True
-
-
-
-
 
 
 if __name__ == '__main__':
