@@ -34,29 +34,29 @@ def new_tasks():
     )
     try:
         db.add(task)
-        msg = {'success': True, 'data': [{'task_id': task_id, 'create_time': create_time, 'creator': creator}],
+        msg = {'success': True, 'data': {'task_id': task_id, 'create_time': create_time, 'creator': creator},
                'message': '成功'}
 
         db.commit()
         # logger.info('task_id:{}|creator:{}'.format(task_id, creator))
     except Exception as e:
         db.rollback()
-        msg = {'success': False, 'data': [], 'message': '系统错误'}
+        msg = {'success': False, 'data': {}, 'message': '系统错误'}
         # logger.exception(e)
     return msg
 
 
 def start_tasks(task_id: str, target):
     if not task_id:
-        msg = {'success': False, 'data': [], 'message': 'task_id不能为空'}
+        msg = {'success': False, 'data': {}, 'message': 'task_id不能为空'}
         return msg
     targets = jsonable_encoder(target)
     if not targets['targets']:
-        msg = {'success': False, 'data': [], 'message': '扫描目标不能为空'}
+        msg = {'success': False, 'data': {}, 'message': '扫描目标不能为空'}
         return msg
     rst: Query = db.query(Tasks).filter(Tasks.task_id == task_id).filter(Tasks.status==1).first()
     if not rst:
-        msg = {'success': False, 'data': [], 'message': '任务id:{}不存在,请先创建'.format(task_id)}
+        msg = {'success': False, 'data': {}, 'message': '任务id:{}不存在,请先创建'.format(task_id)}
         return msg
     try:
         total = fetch_tasks(targets)
@@ -65,12 +65,12 @@ def start_tasks(task_id: str, target):
             update({'targets': targets['targets'], 'status': 2})
         db.commit()
 
-        msg = {'success': True, 'data': [{'targets': targets['targets'], 'total':total}], 'message': '任务启动成功'}
+        msg = {'success': True, 'data': {'targets': targets['targets'], 'total':total}, 'message': '任务启动成功'}
         return msg
     except Exception as e:
         db.rollback()
         logger.exception(e)
-        msg = {'success': False, 'data': [], 'message': '系统错误'}
+        msg = {'success': False, 'data': {}, 'message': '系统错误'}
         return msg
 
 

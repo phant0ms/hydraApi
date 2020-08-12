@@ -5,14 +5,19 @@
 # @File    : items.py
 
 from pydantic import BaseModel
-from typing import List, Any
+from typing import Any, Dict
 
 
 class Response(BaseModel):
     success: bool
-    data: List[Any] = []
+    data: Dict[Any, Any] = None
     message: str
 
 
-class ItemsCreate(BaseModel):
+class Targets(BaseModel):
     targets: str
+
+
+class Login(BaseModel):
+    apiKey: str
+    secretKey: str

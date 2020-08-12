@@ -6,33 +6,43 @@
 
 
 from app.schemas.items import Response
-
-from fastapi import APIRouter
-from typing import List
+from app.core.config import settings
+from fastapi import APIRouter, Security, HTTPException
 # from app.modules.tasks import Tasks
 from app.services.task_opts import new_tasks
 from app.services.task_opts import start_tasks
-from app.schemas.items import ItemsCreate
+from app.schemas.items import Targets
 
-from fastapi import Depends
+from fastapi import Depends, Header
+from typing import Optional
 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader, APIKey
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
+from starlette.status import HTTP_403_FORBIDDEN
+from starlette.responses import RedirectResponse, JSONResponse
+from app.core.security import authenticate
+from app.utils.common import invalid_token
 
 router = APIRouter()
 
 
-@router.get('/task/new', response_model=Response)
-def new():
+@router.get('/task/new', response_model=Response, )
+def new(auth: bool = Depends(authenticate)):
     '''
     创建一个新的任务
 
-    return: 返回任务 id
+    如果成功则返回任务id
     '''
+    if not auth:
+        return invalid_token()
     return new_tasks()
 
 
-@router.post('/task/{task_id}/start', response_model=Response)
-def start(task_id:str, target: ItemsCreate):
+@router.post('/task/{task_id}/start', response_model=Response, )
+def start(task_id: str, target: Targets):
     '''
 
     :param task_id: 任务 id.
@@ -44,7 +54,7 @@ def start(task_id:str, target: ItemsCreate):
 
 
 @router.get('/task/{task_id}/stop')
-def stop(task_id:str):
+def stop(task_id: str):
     '''
     停止指定的任务
     :param task_id:
@@ -52,24 +62,17 @@ def stop(task_id:str):
     '''
     return task_id
 
+
 @router.get('/task/{task_id}/status')
-def status(task_id:str, ):
+def status(task_id: str, ):
     return 'task status'
 
 
 @router.get('/task/{task_id}/delete')
-def delete(task_id:str):
+def delete(task_id: str):
     '''
     删除指定的任务
     :param task_id:
     :return:
     '''
     return True
-
-
-@router.post('/login/access-token')
-def login_access_token(from_data: OAuth2PasswordRequestForm = Depends()):
-    print(from_data.username, from_data.password)
-    print(from_data)
-
-

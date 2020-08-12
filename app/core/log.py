@@ -12,7 +12,8 @@ import sys
 import logging.config
 
 
-BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'logs')
+# BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'logs')
+BASE_DIR = './'
 if not os.path.exists(BASE_DIR):
     os.makedirs(BASE_DIR)
 
