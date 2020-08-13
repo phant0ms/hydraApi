@@ -6,8 +6,9 @@
 
 import secrets
 from datetime import datetime, timedelta
-from typing import Any, Union, Optional
+from typing import Any, Union, Optional, Dict
 from app.schemas.token import TokenPayload
+from sqlalchemy.orm import Session
 
 from jose import jwt
 from passlib.context import CryptContext
@@ -17,7 +18,9 @@ from fastapi import HTTPException, status, Header
 from app.core.config import settings
 # from main import Invalid_Token_Exception
 from app.core.exception import Invalid_Token_Exception
+from app.modules.invoker import Invoker
 
+from app.db.session import SessionLocal
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 ALGORITHM = "HS256"
@@ -71,10 +74,18 @@ def authenticate(access_token: Optional[str] = Header(None)):
         )
         # print(payload)
         token_data = TokenPayload(**payload)
+        print(token_data)
+        appid = token_data.sub
+        db:Session = SessionLocal()
+        invoker = db.query(Invoker).filter(Invoker.app_id==appid).filter(Invoker.active==1).first()
+        if invoker:
+            return invoker
+        else:
+            raise Invalid_Token_Exception(msg='appid:{}已被禁用'.format(appid))
+
     except (jwt.JWTError, ValidationError):
         raise Invalid_Token_Exception()
 
-    return True
 
 
 if __name__ == '__main__':

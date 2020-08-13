@@ -6,17 +6,19 @@
 
 import secrets
 from typing import Any, Dict, List, Optional, Union
-
+from fastapi.staticfiles import StaticFiles
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
 
 from fastapi import FastAPI
+
+
 class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     # SECRET_KEY: str = secrets.token_urlsafe(32)
     SECRET_KEY = 'U2T1tZBNMSyTQpR-VcXWWqFD5Hs_v6ALr6qF2vavHpU'
-    print('secert key:'+SECRET_KEY)
+    print('secert key:' + SECRET_KEY)
     # 60 minutes * 24 hours * 8 days = 8 days
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 10
     SERVER_NAME: str = "localhost"
     SERVER_HOST: AnyHttpUrl = 'http://127.0.0.1'
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
@@ -46,7 +48,7 @@ class Settings(BaseSettings):
     # POSTGRES_PASSWORD: str
     # POSTGRES_DB: str
     # SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
-    SQLALCHEMY_DATABASE_URI :str = 'mysql+pymysql://root:t00r@127.0.0.1:3306/pvs'
+    SQLALCHEMY_DATABASE_URI: str = 'mysql+pymysql://root:t00r@127.0.0.1:3306/pvs'
     # @validator("SQLALCHEMY_DATABASE_URI", pre=True)
     # def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
     #     if isinstance(v, str):
@@ -101,6 +103,6 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-
-webapp = FastAPI(title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json", debug = True)
-# webapp = FastAPI()
+webapp = FastAPI(title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json",
+                 docs_url=None, redoc_url=None, debug=True)
+webapp.mount("/static", StaticFiles(directory="/Users/phant0ms/PycharmProjects/hydraApi/static"), name="static")

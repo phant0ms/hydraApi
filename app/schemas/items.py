@@ -19,5 +19,5 @@ class Targets(BaseModel):
 
 
 class Login(BaseModel):
-    apiKey: str
+    appId: str
     secretKey: str

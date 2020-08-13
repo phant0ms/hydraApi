@@ -18,3 +18,7 @@ class Base:
     def __tablename__(cls) -> str:
         return cls.__name__.lower()
 
+#
+# from app.db.session import engine
+# Base.metadata.create_all(bind=engine)
+# print(engine.table_names())

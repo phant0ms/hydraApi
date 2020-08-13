@@ -24,13 +24,14 @@ from fastapi.openapi.utils import get_openapi
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.responses import RedirectResponse, JSONResponse
 from app.core.security import authenticate
+from app.modules.invoker import Invoker
 
 
 router = APIRouter()
 
 
 @router.get('/task/new', response_model=Response, )
-def new(auth: bool = Depends(authenticate)):
+def new(invoker:Invoker = Depends(authenticate)):
     '''
     创建一个新的任务
 
@@ -38,7 +39,7 @@ def new(auth: bool = Depends(authenticate)):
     '''
     # if not auth:
     #     return invalid_token()
-    return new_tasks()
+    return new_tasks(invoker)
 
 
 @router.post('/task/{task_id}/start', response_model=Response, )

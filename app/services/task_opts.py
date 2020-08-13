@@ -8,7 +8,7 @@ import json
 from app.db.session import SessionLocal
 from app.modules.tasks import Tasks
 from app.schemas.items import Response
-# from app.core.log import logger
+from app.core.log import logger
 
 from app.utils.common import task_id_generator
 from app.utils.common import current_datetime
@@ -17,14 +17,20 @@ from app.utils.common import current_datetime
 from sqlalchemy.orm import Session, Query
 from fastapi.encoders import jsonable_encoder
 from app.utils.redishelper import RedisHelper
+from app.modules.invoker import Invoker
 
 db: Session = SessionLocal()
 
 
-def new_tasks():
+def new_tasks(invoker: Invoker):
+    '''
+
+    :param invoker:
+    :return:
+    '''
     task_id = task_id_generator()
     create_time = current_datetime()
-    creator = 'admin'
+    creator = invoker.nick_name
     task = Tasks(
         # id=1,
         task_id=task_id,
@@ -42,7 +48,7 @@ def new_tasks():
     except Exception as e:
         db.rollback()
         msg = {'success': False, 'data': {}, 'message': '系统错误'}
-        # logger.exception(e)
+        logger.exception(e)
     return msg
 
 
